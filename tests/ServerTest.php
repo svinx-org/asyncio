@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use EorBah545\Examples\HttpServer;
+use EorBah545\Asyncio\Examples\HttpServer;
 
 class ServerTest extends TestCase
 {

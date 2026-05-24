@@ -33,15 +33,15 @@ class FutureTest extends AsyncTestCase
     }
 
     public function testAwait(): void
-    {
-        $future = new Future();
-        $result = $this->await(function () use ($future) {
-            $setter = new \Fiber(function () use ($future) {
-                $future->set_result(99);
-            });
-            \EorBah545\Asyncio\Scheduler::getInstance()->spawn($setter);
-            return await($future->await());
+{
+    $future = new Future();
+    $result = $this->await(function () use ($future) {
+        $setter = new \Fiber(function () use ($future) {
+            $future->set_result(99);
         });
-        $this->assertEquals(99, $result);
-    }
+        \EorBah545\Asyncio\Scheduler::getInstance()->spawn($setter);
+        return $future->await();   // déjà la valeur 99
+    });
+    $this->assertEquals(99, $result);
+}
 }

@@ -1,43 +1,49 @@
-# Asyncio – Async/Await pour PHP
+<div align="center">
+  <img src="https://avatars.githubusercontent.com/u/279503836?v=4" alt="xAI Logo" width="100" />
+  <h1>Async/await for PHP</h1>
+  <p>Promises Async/await for PHP 8.1+ using Fibers.</p>
+  <img src="https://img.shields.io/badge/PHP-8.1%2B-blue" alt="PHP Version" />
+  <br>
+  <img src="https://img.shields.io/badge/license/Apache-2.0%2B-green" alt="License" />
+</div>
 
-[![PHP](https://img.shields.io/badge/PHP-8.1%2B-blue)](https://php.net)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+<br>
 
-**Asyncio** est une librairie asynchrone **100% PHP** sans dépendance externe.  
+**Asyncio** est une librairie asynchrone **100% PHP** sans dépendance externe.
 Elle apporte un vrai mécanisme `async`/`await` grâce aux [Fibers](https://www.php.net/manual/fr/language.fibers.php), une boucle d'événements, des promesses chaînables et des primitives de synchronisation (Queue, Lock, Event, Future).  
-Un serveur HTTP asynchrone est inclus pour exécuter vos handlers de manière non‑bloquante.
+Un serveur HTTP asynchrone est inclus pour exécuter vos handlers de manière non‑bloquante en guise d'exemple.
 
----
+## Documentation
 
-## 🚀 Installation
+Une documentation complète est disponible au [dossier docs](/docs/Index.md). Explorez des guides détaillés, des exemples et des tutoriels pour tirer le meilleur parti de la library.
+
+## Installation
+
+Install depuis packagist avec composer.
 
 ```bash
-composer require eorbah545/asyncio
+composer require eor_bah545/asyncio
 ```
 
-**Ou clonez le dépôt et utilisez l’autoload de Composer :**
+Vous pouvez egalement utiliser github
 
 ```bash
-git clone https://github.com/EORBAH/asyncio.git
+git clone https://github.com/phoenixshareplus/asyncio.git
 cd asyncio
 composer dump-autoload
 ```
 
----
+### Requirements
+PHP 8.1 ou une version supérieur est requis pour utiliser la library `asyncio` pour un support des Fibers.
 
-**✨ Fonctionnalités:**
+## Usage
 
-- async / await natif – écrivez du code asynchrone comme en JavaScript.
-- Boucle d’événements (scheduler) supportant les timers (sleep non‑bloquant) et les flux réseau (stream_select).
-- Promesses (Promise) avec chaînage then / catch, await(), et méthodes statiques all, allSettled, race.
-- Utilitaires : sleep, gather, wait, timeout, createTask, ErrorHandling.
-- Primitives de synchronisation : Queue, Lock, Event, Future.
-- Serveur HTTP asynchrone : définissez des routes GET/POST dont les callbacks peuvent être async. Gère plusieurs requêtes en parallèle sans blocage.
-- Zéro dépendance – tout repose sur les fonctions natives de PHP 8.1+.
+La librairy asyncio prend en charge a la fois l'asynchrone et le synchrone. Pour un ensemble complet d'exemples illustrant les capacités de la librairy, notamment les promises, les events, et bien plus encore, reportez vous au [dossier examples](/examples).
 
----
+### Asyncio Utilisation
 
-**📖 Exemple rapide:**
+Initialez des processus async/await en créer des fonction non blockante avec un support de `then` et `catch` pour capturer les reponse ou les erreur sans 
+bloquer l'execution du code et on peut definir des tache en parallèle.
 
 ```php
 use EorBah545\Asyncio\Asyncio;
@@ -55,8 +61,12 @@ $task = Asyncio::async(function (string $name) {
 $prom1 = $task("T1");
 $prom2 = $task("T2");
 
-$prom1->then(fn($res) => echo "$res\n");
-$prom2->then(fn($res) => echo "$res\n");
+$prom1->then(function($res) {
+    echo "$res\n"; 
+});
+$prom2->then(function($res) { 
+    echo "$res\n"; 
+});
 
 // Exécute la boucle d'événements
 Asyncio::run(function () {
@@ -64,9 +74,7 @@ Asyncio::run(function () {
 });
 ```
 
----
-
-**🌐 Serveur HTTP asynchrone:**
+Si vous utilisez notre server defini dans les exemple alors nous pourriez definir des methodes `get` ou `post` avec des fonction totalement asynchrone qui ne bloque pas le threads.
 
 ```php
 use EorBah545\Examples\HttpServer;
@@ -88,13 +96,11 @@ $server->post('/data', function ($request, Asyncio $async) {
 $server->run(8000);
 ```
 
-Testez avec curl http://localhost:8000/ – la réponse arrive après 1 seconde, sans bloquer le serveur.
+Une fois le script executer avec php le serveur srra mus en marche sur le port 8000, ensuite testez avec curl http://localhost:8000/ – la réponse arrive après 1 seconde, sans bloquer le serveur.
 
----
+## Primitives de synchronisation:
 
-**🧩 Primitives de synchronisation:**
-
-**Queue**
+### Queue
 
 ```php
 $queue = new Queue(2);
@@ -102,7 +108,9 @@ await($queue->put($item));
 $item = await($queue->get());
 ```
 
-**Lock**
+Il faut absolument comprendre que l'utilisation d'`await` hors d'une fonction asynchrone defini par `Asyncion::run` genere automatiquement une exception.
+
+### Lock
 
 ```php
 $lock = new Lock();
@@ -111,7 +119,7 @@ await($lock->acquire());
 $lock->release();
 ```
 
-**Event**
+### Event
 
 ```php
 $event = new Event();
@@ -119,7 +127,7 @@ await($event->wait()); // sera réveillé par $event->set()
 $event->clear();
 ```
 
-**Future**
+### Future
 
 ```php
 $future = new Future();
@@ -127,47 +135,39 @@ $future->set_result(42);
 $result = await($future->await());
 ```
 
----
+## Advanced Features
 
-**📚 API**
+### Asyncio
 
-**Asyncio**
+- `async(callable $fn)`: \Closure Transforme une fonction en coroutine retournant une Promise.
+- `run(callable $coroutine)`: mixed Exécute une coroutine et démarre la boucle événementielle.
+- `sleep(float $seconds)`: Promise Promesse résolue après $seconds secondes (non‑bloquant).
+- `gather(array $promises)`: Promise Équivaut à Promise::all().
+- `wait(array $promises)`: Promise Équivaut à Promise::allSettled().
+- `timeout(callable $coroutine, float $seconds)`: Promise Rejette si la coroutine dépasse le délai.
+- `ErrorHandling(callable $asyncFunc)`: \Closure Décore une fonction async pour capturer les erreurs et retourner null.
+- `createTask(callable $coroutine)`: Promise Lance une coroutine dans une Fiber et retourne une promesse.
 
-Méthode Description
-async(callable $fn): \Closure Transforme une fonction en coroutine retournant une Promise.
-run(callable $coroutine): mixed Exécute une coroutine et démarre la boucle événementielle.
-sleep(float $seconds): Promise Promesse résolue après $seconds secondes (non‑bloquant).
-gather(array $promises): Promise Équivaut à Promise::all().
-wait(array $promises): Promise Équivaut à Promise::allSettled().
-timeout(callable $coroutine, float $seconds): Promise Rejette si la coroutine dépasse le délai.
-ErrorHandling(callable $asyncFunc): \Closure Décore une fonction async pour capturer les erreurs et retourner null.
-createTask(callable $coroutine): Promise Lance une coroutine dans une Fiber et retourne une promesse.
+### Promise
 
-Promise
+- `then(?callable $onFulfilled, ?callable $onRejected)`: Promise
+- `catch(callable $onRejected)`: Promise
+- `await()`: mixed (à utiliser uniquement dans une coroutine)
+- Méthodes statiques : `resolve($value)`, `reject($reason)`, `all($promises)`, `allSettled($promises)`, `race($promises)`
 
-· then(?callable $onFulfilled, ?callable $onRejected): Promise
-· catch(callable $onRejected): Promise
-· await(): mixed (à utiliser uniquement dans une coroutine)
-· Méthodes statiques : resolve($value), reject($reason), all($promises), allSettled($promises), race($promises)
+### Scheduler
 
-Scheduler
+- `getInstance(): self`
+- `run(callable $coroutine): void`
+- `addTimer(float $seconds, callable $callback): void`
+- `onReadable($stream, callable $callback): void`
+- `onWritable($stream, callable $callback): void`
+- `removeStream($stream): void`
 
-· getInstance(): self
-· run(callable $coroutine): void
-· addTimer(float $seconds, callable $callback): void
-· onReadable($stream, callable $callback): void
-· onWritable($stream, callable $callback): void
-· removeStream($stream): void
+## License
 
----
+La librairy Asyncio est distribué sous la license Apache-2.0.
 
-🤝 Contribuer
+## Contributing
 
-Les contributions sont les bienvenues !
-Ouvrez une issue ou une pull request sur GitHub.
-
----
-
-**Licence:**
-
-Ce projet est sous licence MIT. Voir le fichier LICENSE.
+Consulter la [documentation](/CONTRIBUTING.md) sur la contribution à ce projet.
