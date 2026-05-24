@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use EorBah545\Examples\HttpServer;
 use EorBah545\Asyncio\Asyncio;
