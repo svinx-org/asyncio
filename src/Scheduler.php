@@ -13,6 +13,16 @@ class Scheduler
     private bool $running = false;
 
     private function __construct() {}
+    
+    public function reset(): void
+    {
+        $this->fibers = [];
+        $this->activeFibers = 0;
+        $this->timers = [];
+        $this->readStreams = [];
+        $this->writeStreams = [];
+        $this->running = false;
+    }
 
     public static function getInstance(): self
     {

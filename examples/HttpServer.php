@@ -1,6 +1,6 @@
 <?php
 
-namespace EorBah545\Examples;
+namespace EorBah545\Asyncio\Examples;
 
 use EorBah545\Asyncio\Asyncio;
 use EorBah545\Asyncio\Promise;
