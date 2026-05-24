@@ -17,7 +17,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "EorBah545\\Asyncio\\Tests": "tests/",
+            "EorBah545\\Asyncio\\Tests\\": "tests/",
             "EorBah545\\Asyncio\\Examples\\": "examples/"
         }
     },
