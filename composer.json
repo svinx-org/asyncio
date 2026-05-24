@@ -1,0 +1,22 @@
+{
+    "name": "eor_bah545/asyncio",
+    "autoload": {
+        "psr-4": {
+            "EorBah545\\Asyncio\\": "src/"
+        },
+        "files": [
+            "src/functions.php" 
+         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EorBah545\\Examples\\": "examples/"
+        }
+    },
+    "authors": [
+        {
+            "name": "EORBAH",
+            "email": "elle.oumarrafiou@gmail.com"
+        }
+    ]
+}
