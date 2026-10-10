@@ -10,7 +10,7 @@
 <br>
 
 **Asyncio** est une librairie asynchrone **100% PHP** sans dépendance externe.
-Elle apporte un vrai mécanisme `async`/`await` grâce aux [Fibers](https://www.php.net/manual/fr/language.fibers.php), une boucle d'événements, des promesses chaînables et des primitives de synchronisation (Queue, Lock, Event, Future).  
+Elle apporte un mécanisme `async`/`await` grâce aux [Fibers](https://www.php.net/manual/fr/language.fibers.php), une boucle d'événements, des promesses chaînables et des primitives de synchronisation (Queue, Lock, Event, Future).  
 Un serveur HTTP asynchrone est inclus pour exécuter vos handlers de manière non‑bloquante en guise d'exemple.
 
 ## Documentation
